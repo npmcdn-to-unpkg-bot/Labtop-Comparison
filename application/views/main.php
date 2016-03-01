@@ -1,6 +1,3 @@
-<link href="/static/css/mycss.css" rel="stylesheet" media="screen">
-<script src="/static/js/isotope.pkgd.min.js"></script>
-<script type="text/javascript" src="http://www.technicalkeeda.com/js/javascripts/plugin/json2.js"></script>
 <div class="container-fluid">
     <div class="row">
         <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 left">
@@ -10,18 +7,22 @@
                 <button class="button" data-filter=".nVidia계열">nVidia</button>
                 <button class="button" data-filter=".ATI계열">ATI</button>
             </div>
+            <div class="comparewrapper">
+                <div class="comparelist">
+                    
+                </div>
+            </div>
         </div>
         <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 content">
             <div class="isotope">
                 <?php foreach($data as $item){ ?>
-                <div class="thumbs_with_description <?=$item->graphic_spec?>" data-category="<?=$item->graphic_spec?>">
+                <div class="thumbs_with_description <?=$item->graphic_spec?>" data-category="<?=$item->graphic_spec?>" id="<?=$item->pid?>">
                     <div class="image">
                         <img src="<?=$item->img_url?>" class="thumbsnail">
+                        <span class="text-content"><span><?=$item->lcd_size?><br><?=$item->graphic_chip?></span></span>
                     </div>
-                    <div class="description">
-                        <?=$item->model?>
-                    </div>
-                    <span class="text-content"><span><?=$item->lcd_size?><br><?=$item->graphic_chip?></span></span>
+                    <div class="description"><?=$item->model?></div>
+                    <button type="button" class="btn btn-default btn-md compare-btn"><span class="glyphicon glyphicon-star" id="<?=$item->pid?>" onclick="addlist(this.id)"></span></button>
                 </div>
                 <?php } ?>
             </div>
@@ -30,6 +31,8 @@
 </div>
 <script>
     var page = 31;
+    var added_item_cnt=0;
+    var compare_arr=[];
     var $container = $('.isotope');
     $('#filters').on('click', 'button', function() {
         var filterValue = $(this).attr('data-filter');
@@ -39,12 +42,52 @@
             filter: filterValue,
         });
     });
+    function getDBbyID(id)
+    {
+        var res;
+        $.ajax({
+            type: "post",
+            url: "https://laptop-comparison-eldkqmfhf123.c9users.io/Getmoredata/getDatabyID",
+            cache : false,
+            async : false, 
+            data: {
+                'pid' : id
+            },
+            success: function(response){
+                try {
+                    res = response;
+                }
+                catch(e){
+                    alert("json parse error");
+                }
+            },
+            error: function(e){
+                alert("ajax error");
+            }
+            
+        });
+        return res;
+    }
+    function addlist(id)
+    {
+       var arr = JSON.parse(getDBbyID(id));
+       var item = "<li id='"+arr[0]['pid']+"'>"+arr[0]['model']+"</li>";
+       var list = $('.comparelist');
+       list.append(item);
+       compare_arr[added_item_cnt]=arr[0]['pid'];
+       added_item_cnt++;
+       if(added_item_cnt==2)
+       {
+           list.append("<a href='compare/id/"+compare_arr[0]+"/"+compare_arr[1]+"'><button type='button' class='btn btn-default btn-md'>비교하기</button></a>");
+       }
+    }
+    
     $(document).ready(function() {
         $('.isotope').isotope({
             itemSelector: '.thumbs_with_description',
             layoutmod: 'masonry',
         });
-        $(window).scroll(function() {
+        $(window).scroll(function() {  // When hit bottom
 
             if ($(window).scrollTop() == ($(document).height() - ($(window).height()))) {
                 loadData();
@@ -66,8 +109,7 @@
                         var i;
                         for (i = 0; i < 30; i++) {
                             var items = "";
-                            items = "<div class='thumbs_with_description " + arr[i]['graphic_spec'] + "' data-category='" + arr[i]['graphic_spec'] + "'>" +"<div class='image'>"+"<img src='" + arr[i]['img_url'] + "' class='thumbsnail'>"+"</div>"+ "<div class='description'>" + arr[i]['model'] + "</div>";
-                            items = items+"<span class='text-content'><span>"+arr[i]['lcd_size']+"<br>"+arr[i]['graphic_chip']+"</span></span>";
+                            items = "<div class='thumbs_with_description " + arr[i]['graphic_spec'] + "' data-category='" + arr[i]['graphic_spec'] + "'>" +"<div class='image'>"+"<img src='" + arr[i]['img_url'] + "' class='thumbsnail'>"+"<span class='text-content'><span>"+arr[i]['lcd_size']+"<br>"+arr[i]['graphic_chip']+"</span></span>"+"</div>"+ "<div class='description'>" + arr[i]['model'] + "</div>";
                             items = items+"</div>";
                             $container.isotope('insert', $(items));
                         }
