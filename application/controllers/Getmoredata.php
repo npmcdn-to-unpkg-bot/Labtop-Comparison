@@ -6,9 +6,16 @@ class Getmoredata extends CI_Controller {
         $this->load->database();
         $this->load->model('laptop_model');
     }
-    function addon(){
+    function addon()
+    {
         $var = $this->input->post('start');
         $data = $this->laptop_model->getmoreDB($var);
+        echo json_encode($data);
+    }
+    function getDatabyID()
+    {
+        $pid = $this->input->post('pid');
+        $data = $this->laptop_model->getDBbyID($pid);
         echo json_encode($data);
     }
 }

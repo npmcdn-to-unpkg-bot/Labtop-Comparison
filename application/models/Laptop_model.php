@@ -1,14 +1,4 @@
 <?php
-/*class Laptop_model extends CI_Model{
-    function __construct(){
-        parent::__construct();
-    }
-    
-    public function gets(){
-        return $this->db->query("SELECT * FROM DB LIMIT 0,100")->result();
-        
-    }
-}*/
 
 class Laptop_model extends CI_Model{
     function __construct(){
@@ -21,6 +11,10 @@ class Laptop_model extends CI_Model{
     }
     public function getmoreDB($start){
         $query = $this->db->query("select * from DB limit $start, 30")->result();
+        return $query;
+    }
+    public function getDBbyID($pid){
+        $query = $this->db->query("select * from DB where pid = '$pid'")->result();
         return $query;
     }
 }
