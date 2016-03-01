@@ -7,7 +7,7 @@ class Laptop extends CI_Controller {
         $this->load->model('laptop_model');
     }
     function index(){
-        $data = $this->laptop_model->gets();
+        $data = $this->laptop_model->getData();
         $this->load->view('head');
         $this->load->view('main', array('data'=>$data));
         $this->load->view('footer');
