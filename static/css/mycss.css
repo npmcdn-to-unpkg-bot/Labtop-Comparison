@@ -1,3 +1,4 @@
+
 .description {
     padding: 5px;
     text-align: center;
@@ -8,8 +9,8 @@
     margin : 2px;
 }
 .thumbsnail {
-    width: 300px;
-    height : 300px;
+    width: 350px;
+    height : 350px;
 }
 
 span.text-content span {
@@ -54,11 +55,12 @@ table {
 	line-height: 24px;
 	margin: 30px auto;
 	text-align: center;
-	width: 800px;
+	width: 1000px;
+	table-layout: fixed;
 }	
 
 th {
-	background: url(http://jackrugile.com/images/misc/noise-diagonal.png), linear-gradient(#777, #444);
+	background: linear-gradient(#777, #444);
 	border-left: 1px solid #555;
 	border-right: 1px solid #777;
 	border-top: 1px solid #555;
@@ -112,12 +114,9 @@ td:last-child {
 	box-shadow: inset -1px 0 0 #fff;
 }	
 
-tr {
-	background: url(http://jackrugile.com/images/misc/noise-diagonal.png);	
-}
 
 tr:nth-child(odd) td {
-	background: #f1f1f1 url(http://jackrugile.com/images/misc/noise-diagonal.png);	
+	background: #f1f1f1;	
 }
 
 tr:last-of-type td {
@@ -140,4 +139,18 @@ tbody:hover td {
 tbody:hover tr:hover td {
 	color: #444;
 	text-shadow: 0 1px 0 #fff;
+}
+
+.compare_thumbs{
+	width:300px;
+	height:300px;
+}
+tr.divider {
+	text-align:center;
+}
+.data{
+	width : 40%;
+}
+.option{
+	width:20%;
 }
