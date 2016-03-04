@@ -124,6 +124,7 @@
                         for (i = 0; i < 30; i++) {
                             var items = "";
                             items = "<div class='thumbs_with_description " + arr[i]['graphic_spec'] + "' data-category='" + arr[i]['graphic_spec'] + "'>" + "<div class='image'>" + "<img src='" + arr[i]['img_url'] + "' class='thumbsnail'>" + "<span class='text-content'><span>" + arr[i]['lcd_size'] + "<br>" + arr[i]['graphic_chip'] + "</span></span>" + "</div>" + "<div class='description'>" + arr[i]['model'] + "</div>";
+                            items = items + "<button type='button' class='btn btn-default btn-xs compare-btn' id='" + arr[i]['pid'] +"'onclick='addlist(this.id)'>비교목록 <span class='glyphicon glyphicon-plus'></span></button>";
                             items = items + "</div>";
                             $container.isotope('insert', $(items));
                         }
