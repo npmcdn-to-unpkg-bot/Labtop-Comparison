@@ -1,44 +1,47 @@
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 left">
-            <div id="sidebar">
-                <div id="filters" class="button-group">
-                    <button class="button is-checked" data-filter="*">show all</button>
-                    <button class="button" data-filter=".Intel계열">Intel</button>
-                    <button class="button" data-filter=".nVidia계열">nVidia</button>
-                    <button class="button" data-filter=".ATI계열">ATI</button>
-                </div>
-                <div class="comparelist" id="comparelist">
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 left">
+                <div id="sidebar">
+                    <div id="filters" class="button-group">
+                        <button class="button is-checked" data-filter="*">show all</button>
+                        <button class="button" data-filter=".Intel계열">Intel</button>
+                        <button class="button" data-filter=".nVidia계열">nVidia</button>
+                        <button class="button" data-filter=".ATI계열">ATI</button>
+                    </div>
+                    <div class="comparelist" id="comparelist">
 
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 content">
-            <div class="isotope">
-                <?php foreach($data as $item){ ?>
-                <div class="thumbs_with_description <?=$item->graphic_spec?>" data-category="<?=$item->graphic_spec?>" id="<?=$item->pid?>">
-                    <div class="image">
-                        <img src="<?=$item->img_url?>" class="thumbsnail">
-                        <span class="text-content"><span><?=$item->lcd_size?><br><?=$item->graphic_chip?></span></span>
+            <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 content">
+                <div class="isotope">
+                    <?php foreach($data as $item){ ?>
+                    <div class="thumbs_with_description <?=$item->graphic_spec?>" data-category="<?=$item->graphic_spec?>" id="<?=$item->pid?>">
+                        <div class="image">
+                            <img src="<?=$item->img_url?>" class="thumbsnail">
+                            <span class="text-content"><span><?=$item->lcd_size?><br><?=$item->graphic_chip?></span></span>
+                        </div>
+                        <div class="description">
+                            <?=$item->model?></div>
+                        <button type="button" class="btn btn-default btn-xs compare-btn" id="<?=$item->pid?>" onclick="addlist(this.id)">비교목록 <span class="glyphicon glyphicon-plus"></span></button>
                     </div>
-                    <div class="description">
-                        <?=$item->model?></div>
-                    <button type="button" class="btn btn-default btn-xs compare-btn" id="<?=$item->pid?>" onclick="addlist(this.id)">비교목록 <span class="glyphicon glyphicon-plus"></span></button>
+                    <?php } ?>
                 </div>
-                <?php } ?>
             </div>
         </div>
     </div>
-</div>
+</body>
 <script>
     var page = 31;
     var added_item_cnt = 0;
     var compare_arr = [];
     var $container = $('.isotope');
-    $(function()
-    {
+    $(function() {
         $('#sidebar').affix({
-            offset: {top:150}
+            offset: {
+                top: 150
+            }
         });
     });
     $('#filters').on('click', 'button', function() {
@@ -124,7 +127,7 @@
                         for (i = 0; i < 30; i++) {
                             var items = "";
                             items = "<div class='thumbs_with_description " + arr[i]['graphic_spec'] + "' data-category='" + arr[i]['graphic_spec'] + "'>" + "<div class='image'>" + "<img src='" + arr[i]['img_url'] + "' class='thumbsnail'>" + "<span class='text-content'><span>" + arr[i]['lcd_size'] + "<br>" + arr[i]['graphic_chip'] + "</span></span>" + "</div>" + "<div class='description'>" + arr[i]['model'] + "</div>";
-                            items = items + "<button type='button' class='btn btn-default btn-xs compare-btn' id='" + arr[i]['pid'] +"'onclick='addlist(this.id)'>비교목록 <span class='glyphicon glyphicon-plus'></span></button>";
+                            items = items + "<button type='button' class='btn btn-default btn-xs compare-btn' id='" + arr[i]['pid'] + "'onclick='addlist(this.id)'>비교목록 <span class='glyphicon glyphicon-plus'></span></button>";
                             items = items + "</div>";
                             $container.isotope('insert', $(items));
                         }

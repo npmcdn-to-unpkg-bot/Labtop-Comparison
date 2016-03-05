@@ -12,10 +12,7 @@
     <link href="/static/css/mycss.css" rel="stylesheet" media="screen">
     <script src="/static/js/isotope.pkgd.min.js"></script>
     <script type="text/javascript" src="http://www.technicalkeeda.com/js/javascripts/plugin/json2.js"></script>
-</head>
-
-<body>
-    <nav class="navbar navbar-default">
+    <nav class="navbar navbar-default navbar-fixed-top">
         <div class="container-fluid">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
@@ -64,3 +61,4 @@
         </div>
         <!-- /.container-fluid -->
     </nav>
+</head>
