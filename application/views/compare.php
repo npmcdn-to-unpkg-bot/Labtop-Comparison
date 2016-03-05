@@ -11,7 +11,7 @@
     <tbody>
         <tr>
             <td><img src="<?=$data1[0]->img_url?>" class="compare_thumbs"></td>
-            <td class="option"><strong></strong></td>
+            <td class="option"><strong>사진</strong></td>
             <td><img src="<?=$data2[0]->img_url?>" class="compare_thumbs"></td>
         </tr>
         <tr>
@@ -70,6 +70,25 @@
             <td class="data"><?=$data1[0]->graphic_mem?></td>
             <td class="option"><strong>GPU 전용 메모리</strong></td>
             <td class="data"><?=$data2[0]->graphic_mem?></td>
+        </tr>
+        <tr>
+            <td class="data"><?=$data1[0]->graphic_rank?></td>
+            <td class="option"><strong>GPU 순위</strong></td>
+            <td class="data"><?=$data2[0]->graphic_rank?></td>
+        </tr>
+    </tbody>
+</table>
+<table>
+    <tbody>
+        <tr>
+            <td class="data"><?=$data1[0]->size?></td>
+            <td class="option"><strong>사이즈</strong></td>
+            <td class="data"><?=$data2[0]->size?></td>
+        </tr>
+        <tr>
+            <td class="data"><?=$data1[0]->weight?></td>
+            <td class="option"><strong>무게</strong></td>
+            <td class="data"><?=$data2[0]->weight?></td>
         </tr>
     </tbody>
 </table>
