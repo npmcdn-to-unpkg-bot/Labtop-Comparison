@@ -1,25 +1,37 @@
 <body>
     <div class="container-fluid">
         <div class="row">
-            <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 left sidebar">
-                <div id="filters">
-                    <p>
-                        <input type="text" class="quicksearch" placeholder="검색" id="search_query" />
-                    </p>
-                    <label>그래픽</label>
-                    <br>
-                    <select class="selectpicker" id="graphic_filter">
-                        <option selected value="">Show All</option>
-                        <option value="Intel">Intel</option>
-                        <option value="nVidia">nVidia</option>
-                        <option value="ATI">ATI</option>
-                    </select>
-                </div>
-                <div class="comparelist" id="comparelist">
+            <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 left">
+                <div id="sidebar">
+                    <div id="filters">
+                        <label>화면 크기</label>
+                        <br>
+                        <select class="selectpicker" id="size_filter">
+                            <option selected value="">Show All</option>
+                            <option value="11.6">11.6인치</option>
+                            <option value="13.3">13.3인치</option>
+                            <option value="14">14인치</option>
+                            <option value="15.6">15.6인치</option>
+                            <option value="17.3">17.3인치</option>
 
+                        </select>
+                        <br>
+                        <br>
+                        <label>그래픽</label>
+                        <br>
+                        <select class="selectpicker" id="graphic_filter">
+                            <option selected value="">Show All</option>
+                            <option value="Intel">Intel</option>
+                            <option value="nVidia">nVidia</option>
+                            <option value="ATI">ATI</option>
+                        </select>
+
+                    </div>
+                    <div class="comparelist" id="comparelist">
+
+                    </div>
                 </div>
             </div>
-
             <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 content">
                 <div class="dataset" id="dataset">
                     <div class="isotope" id="isotope">
@@ -27,8 +39,10 @@
                 </div>
             </div>
         </div>
+
     </div>
 </body>
+
 <script>
     var page = 0;
     var init = 0;
@@ -43,24 +57,21 @@
         });
     })
 
-    $('#graphic_filter').change(function() {
-        var e = document.getElementById('graphic_filter');
-        var selected = e.options[e.selectedIndex].value;
+    $('#graphic_filter, #size_filter').change(function() {
         page = 0;
         var $elem = document.getElementById('isotope').childNodes;
         $container.isotope('remove', $elem);
-        loadData($('#search_query').val(), selected);
+        loadData();
     });
+
 
     $('#search_query').keyup(function() {
         delay(function() {
             var query = $('#search_query').val();
             page = 0;
             var $elem = document.getElementById('isotope').childNodes;
-            var e = document.getElementById('graphic_filter');
-            var graphic_filter = e.options[e.selectedIndex].value;
             $container.isotope('remove', $elem);
-            loadData(query, graphic_filter);
+            loadData();
         }, 200);
 
     });
@@ -119,26 +130,29 @@
         added_item_cnt--;
     }
     $(document).ready(function() {
+        
         $('.isotope').isotope({
             itemSelector: '.thumbs_with_description',
             layoutmod: 'masonry',
         });
         $(window).scroll(function() { // When hit bottom
             if ($(window).scrollTop() == ($(document).height() - ($(window).height()))) {
-                var e = document.getElementById('graphic_filter');
-                var selected = e.options[e.selectedIndex].value;
-                loadData($('#search_query').val(), selected);
+                loadData();
             }
+        $container.isotope('layout');    
         });
         if (init == 0) {
             init = 1;
-            var e = document.getElementById('graphic_filter');
-            var selected = e.options[e.selectedIndex].value;
-            loadData($('#search_query').val(), selected);
+            loadData();
         }
     });
-
-    function loadData(query, gpu_filter) {
+    function loadData() {
+        $container.isotope('layout');
+        var graphic_node = document.getElementById('graphic_filter');
+        var graphic_filter = graphic_node.options[graphic_node.selectedIndex].value;
+        var size_node = document.getElementById('size_filter');
+        var size_filter = size_node.options[size_node.selectedIndex].value;
+        var query = $('#search_query').val();
         $.ajax({
             type: "post",
             url: "https://laptop-comparison-eldkqmfhf123.c9users.io/Getmoredata/addon",
@@ -146,7 +160,8 @@
             data: {
                 'start': page,
                 'query': query,
-                'graphic_filter': gpu_filter
+                'size_filter': size_filter,
+                'graphic_filter': graphic_filter
             },
             success: function(response) {
                 var arr = JSON.parse(response);
@@ -154,12 +169,14 @@
                     var i;
                     var items = "";
                     for (i = 0; i < arr.length; i++) {
-                        items = items + "<div id='thumbs_with_description' class='thumbs_with_description " + arr[i]['graphic_spec'] + "' data-category='" + arr[i]['graphic_spec'] + "'>" + "<div class='image'>" + "<img src='" + arr[i]['img_url'] + "' class='thumbsnail'>" + "<span class='text-content'><span>" + arr[i]['lcd_size'] + "<br>" + arr[i]['graphic_chip'] + "</span></span>" + "</div>" + "<div class='description'>" + arr[i]['model'] + "</div>";
-                        items = items + "<button type='button' class='btn btn-default btn-xs compare-btn' id='" + arr[i]['pid'] + "'onclick='addlist(this.id)'>비교목록 <span class='glyphicon glyphicon-plus'></span></button>";
-                        items = items + "</div>";
+                        items = items + "<div id='thumbs_with_description' class='thumbs_with_description panel panel-default'><button type='button' class='btn btn-default btn-xs compare-btn' id='"+arr[i]['pid']+"' onclick='addlist(this.id)'>비교목록<span class='glyphicon glyphicon-plus'></span></button>";
+                        items = items+"<div class='panel-body'><img src='"+arr[i]['img_url']+"' class='thumbsnail'/></div><div class='panel-footer description'>"+arr[i]['model']+"</div></div>";
                     }
-                    $container.isotope('insert', $(items));
-                    page += 30;
+                    $(items).imagesLoaded(function(){
+                        $container.isotope('insert', $(items));
+                    });
+                    
+                    page += arr.length;
                 }
                 catch (e) {
                     alert("error at json processing");
