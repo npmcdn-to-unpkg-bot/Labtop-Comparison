@@ -9,8 +9,8 @@ class Laptop_model extends CI_Model{
         $query = $this->db->query("select * from DB limit 0,30")->result();
         return $query;
     }
-    public function getmoreDB($start){
-        $query = $this->db->query("select * from DB limit $start, 30")->result();
+    public function getmoreDB($start, $query, $graphic_filter){
+        $query = $this->db->query("select * from DB where (graphic_spec like '%$graphic_filter%' and model like '%$query%') limit $start, 30")->result();
         return $query;
     }
     public function getDBbyID($pid){
