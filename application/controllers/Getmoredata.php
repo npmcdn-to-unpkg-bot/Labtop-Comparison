@@ -10,8 +10,9 @@ class Getmoredata extends CI_Controller {
     {
         $start = $this->input->post('start');
         $query = $this->input->post('query');
+        $size_filter = $this->input->post('size_filter');
         $graphic_filter = $this->input->post('graphic_filter');
-        $data = $this->laptop_model->getmoreDB($start, $query, $graphic_filter);
+        $data = $this->laptop_model->getmoreDB($start, $query,$size_filter, $graphic_filter);
         echo json_encode($data);
     }
     function getDatabyID()
