@@ -42,7 +42,16 @@
 
     </div>
 </body>
+<div class='modal fade' id='description_modal' tabindex='-1' role='dialog' area-labelledby='modallabel' aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-title" id='modallabel'></div>
+            <div class="modal-body"></div>
+            <div class="modal-footer"></div>
+        </div>
+    </div>
 
+</div>
 <script>
     var page = 0;
     var init = 0;
@@ -82,6 +91,21 @@
             timer = setTimeout(callback, ms);
         };
     })();
+
+    $('#description_modal').on('show.bs.modal', function(e) {
+        var pid = ($(e.relatedTarget).attr('data-id'));
+        var arr = JSON.parse(getDBbyID(pid));
+        var item = "<h4>" + arr[0]['model'] + "</h4>";
+        var footer = "<a target='_blank' href='http://www.bb.co.kr/model/" + arr[0]['pid'] + "'><button type='button' class='btn btn-default btn-xs'>구매하러 가기</button><button type='button' class='btn btn-default btn-xs compare-btn' id='" + arr[0]['pid'] + "' onclick='addlist(this.id)'>비교목록<span class='glyphicon glyphicon-plus'></span></button>";
+        $('.modal-title').empty();
+        $('.modal-title').append(item);
+        item = '<div style="text-align:center;"><img src="' + arr[0]['img_url'] + '" ></div>'
+        item = item + '<table><tr><td><strong>화면 크기</strong></td><td>'+arr[0]['lcd_size']+'</td></tr><tr><td><strong>해상도</strong></td><td>'+arr[0]['lcd_resolution']+'</td></tr></table><table><tr><td><strong>CPU</strong></td><td>'+arr[0]['cpu_core']+'</td></tr><tr><td><strong>CPU 클럭</strong></td><td>'+arr[0]['cpu_clock']+'</td></tr></table><table><tr><td><strong>RAM</strong></td><td>'+arr[0]['memory_size']+'</td></tr><tr><td><strong>RAM 종류</strong></td><td>'+arr[0]['memory_spec']+'</td></tr></table><table><tr><td><strong>GPU종류</strong></td><td>'+arr[0]['graphic_spec']+'</td></tr><tr><td><strong>GPU 모델</strong></td><td>'+arr[0]['graphic_chip']+'</td></tr><tr><td><strong>GPU 전용 메모리</strong></td><td>'+arr[0]['graphic_mem']+'</td></tr></table><table><tr><td><strong>사이즈</strong></td><td>'+arr[0]['size']+'</td></tr><tr><td><strong>무게</strong></td><td>'+arr[0]['weight']+'</td></tr></table>';
+        $('.modal-body').empty();
+        $('.modal-body').append(item);
+        $('.modal-footer').empty();
+        $('.modal-footer').append(footer);
+    });
 
     function getDBbyID(id) {
         var res;
@@ -130,7 +154,7 @@
         added_item_cnt--;
     }
     $(document).ready(function() {
-        
+
         $('.isotope').isotope({
             itemSelector: '.thumbs_with_description',
             layoutmod: 'masonry',
@@ -139,13 +163,14 @@
             if ($(window).scrollTop() == ($(document).height() - ($(window).height()))) {
                 loadData();
             }
-        $container.isotope('layout');    
+            $container.isotope('layout');
         });
         if (init == 0) {
             init = 1;
             loadData();
         }
     });
+
     function loadData() {
         $container.isotope('layout');
         var graphic_node = document.getElementById('graphic_filter');
@@ -169,13 +194,13 @@
                     var i;
                     var items = "";
                     for (i = 0; i < arr.length; i++) {
-                        items = items + "<div id='thumbs_with_description' class='thumbs_with_description panel panel-default'><button type='button' class='btn btn-default btn-xs compare-btn' id='"+arr[i]['pid']+"' onclick='addlist(this.id)'>비교목록<span class='glyphicon glyphicon-plus'></span></button>";
-                        items = items+"<div class='panel-body'><img src='"+arr[i]['img_url']+"' class='thumbsnail'/></div><div class='panel-footer description'>"+arr[i]['model']+"</div></div>";
+                        items = items + "<div id='thumbs_with_description' class='thumbs_with_description panel panel-default'><button type='button' class='btn btn-default btn-xs compare-btn' id='" + arr[i]['pid'] + "' onclick='addlist(this.id)'>비교목록<span class='glyphicon glyphicon-plus'></span></button>";
+                        items = items + "<div class='panel-body'><a data-toggle='modal' href='#description_modal' data-id='" + arr[i]['pid'] + "'><img src='" + arr[i]['img_url'] + "' class='thumbsnail'/></a></div><div class='panel-footer description'>" + arr[i]['model'] + "</div></div>";
                     }
-                    $(items).imagesLoaded(function(){
+                    $(items).imagesLoaded(function() {
                         $container.isotope('insert', $(items));
                     });
-                    
+
                     page += arr.length;
                 }
                 catch (e) {
